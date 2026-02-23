@@ -1,8 +1,5 @@
-const validator = require('validator');
+const chalk = require('chalk');
 const getNotes = require('./notes.cjs');
 
-
 console.log(getNotes());
-
-console.log(validator.isEmail('test@test.com'));
-console.log(validator.isURL('https://node.org'));
+console.log(chalk.green('Sueccess'));
