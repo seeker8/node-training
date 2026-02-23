@@ -3,4 +3,8 @@ function getNotes() {
   return 'Your notes...';
 }
 
-module.exports = getNotes;
+const notes = {
+  getNotes
+};
+
+module.exports = notes;
