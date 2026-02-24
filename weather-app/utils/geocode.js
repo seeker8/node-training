@@ -1,5 +1,8 @@
 const request = require('request');
 
+const apiToken = process.env.POSITION_TOKEN;
+const positionBaseUrl = 'https://api.positionstack.com/v1/'
+
 const geoCode = (address, callback) => {
   const queryParams = `access_key=${apiToken}&query=${encodeURIComponent(address)}&country=US&limit=1&fields=results.latitude%2Cresults.longitude`;
   const positionUrl = `${positionBaseUrl}forward?${queryParams}`;
