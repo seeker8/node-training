@@ -2,9 +2,12 @@ const path = require('path');
 const express = require('express');
 
 const app = express();
+const viewsPath = path.join(__dirname, '../templates');
 
 // setup handlebars
 app.set('view engine', 'hbs');
+// set views directory. By default it looks for 'views' directory
+app.set('views', viewsPath);
 app.use(express.static(path.join(__dirname, '../public')));
 
 app.get('', (req, res) => {
@@ -18,6 +21,15 @@ app.get('/about', (req, res) => {
       title: 'About Us',
       image: '/images/sunabouzu.jpg',
       description: 'sunabouzu'
+    });
+});
+
+app.get('/help', (req, res) => {
+  res.render(
+    'help',
+    {
+      title: 'Help',
+      message: 'if you need help let us know'
     });
 });
 
