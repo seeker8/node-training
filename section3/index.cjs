@@ -1,5 +1,5 @@
 const yargs = require('yargs');
-const { addNote, removeNote } = require('./notes.cjs');
+const { addNote, removeNote, listNotes, getNote } = require('./notes.cjs');
 
 // Create add command
 yargs.command({
@@ -42,8 +42,15 @@ yargs.command({
 yargs.command({
   command: 'read',
   description: 'Read a new note',
-  handler() {
-    console.log('Note');
+  builder: {
+    title: {
+      description: 'Title of the note to search',
+      type: 'string',
+      demandCommand: true
+    }
+  },
+  handler(argv) {
+    getNote(argv.title);
   }
 });
 
@@ -52,7 +59,7 @@ yargs.command({
   command: 'list',
   description: 'List notes',
   handler() {
-    console.log('Listing notes...');
+    listNotes();
   }
 });
 
