@@ -1,6 +1,6 @@
 const yargs = require('yargs');
 const chalk = require('chalk');
-const { getNotes } = require('./notes.cjs');
+const { getNotes, addNote } = require('./notes.cjs');
 
 // Create add command
 yargs.command({
@@ -19,8 +19,7 @@ yargs.command({
     }
   },
   handler: function (argv) {
-    console.log('Title: ', argv.title);
-    console.log('Note: ', argv.body);
+    addNote(argv.title, argv.body);
   }
 });
 
