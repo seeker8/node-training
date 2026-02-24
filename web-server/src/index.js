@@ -3,19 +3,24 @@ const express = require('express');
 const app = express();
 
 app.get('/', (request, response) => {
-  response.send('Hello');
+  response.send('<h1>Hello</h1>');
 });
 
 app.get('/help', (req, res) => {
-  res.send('This is the help page');
+  res.send({
+    title: 'This is the help page'
+  });
 });
 
 app.get('/about', (req, res) => {
-  res.send('This is the about page');
+  res.send('<h1>About Us</h1>');
 });
 
 app.get('/weather', (req, res) => {
-  res.send('This is the weather page');
+  res.send({
+    temperature: 75,
+    unit: 'C'
+  });
 });
 
 app.listen(3000, (error) => {
