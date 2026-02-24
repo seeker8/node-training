@@ -12,10 +12,10 @@ function addNote(title, body) {
   if (filtered.length === 0) {
     notes.push({ title, body });
     saveNotes(notes);
-    console.log(chalk.green('New Note added!'));
+    console.log(chalk.bgGreen('New Note added!'));
   }
   else {
-    console.log(chalk.red('Note title taken!'));
+    console.log(chalk.bgRed('Note title taken!'));
   }
 }
 
@@ -24,10 +24,10 @@ function removeNote(title) {
   updatedNotes = notes.filter((note) => note.title !== title);
   if (updatedNotes.length < notes.length) {
     saveNotes(updatedNotes);
-    console.log(chalk.green('Notes updated successfuly!'));
+    console.log(chalk.bgGreen('Notes updated successfuly!'));
   }
   else {
-    console.log(chalk.yellow('The title entered was not found. Notes were not updated.'));
+    console.log(chalk.bgRed('Note not found. Notes were not updated.'));
   }
 }
 
