@@ -19,6 +19,18 @@ function addNote(title, body) {
   }
 }
 
+function removeNote(title) {
+  const notes = loadNotes();
+  updatedNotes = notes.filter((note) => note.title !== title);
+  if (updatedNotes.length < notes.length) {
+    saveNotes(updatedNotes);
+    console.log(chalk.green('Notes updated successfuly!'));
+  }
+  else {
+    console.log(chalk.yellow('The title entered was not found. Notes were not updated.'));
+  }
+}
+
 function saveNotes(notes) {
   fs.writeFileSync('notes.json', JSON.stringify(notes));
 }
@@ -35,5 +47,6 @@ function loadNotes() {
 
 module.exports = {
   getNotes,
-  addNote
+  addNote,
+  removeNote
 };
