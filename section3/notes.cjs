@@ -25,8 +25,8 @@ const listNotes = () => {
 
 const addNote = (title, body) => {
   const notes = loadNotes();
-  const filtered = notes.filter(note => note.title === title);
-  if (filtered.length === 0) {
+  const duplicateNote = notes.find(note => note.title === title);
+  if (!duplicateNote) {
     notes.push({ title, body });
     saveNotes(notes);
     console.log(chalk.bgGreen('New Note added!'));
