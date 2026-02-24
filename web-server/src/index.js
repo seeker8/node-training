@@ -3,7 +3,23 @@ const express = require('express');
 
 const app = express();
 
+// setup handlebars
+app.set('view engine', 'hbs');
 app.use(express.static(path.join(__dirname, '../public')));
+
+app.get('', (req, res) => {
+  res.render('index', { title: 'Cool Weather App' });
+});
+
+app.get('/about', (req, res) => {
+  res.render(
+    'about',
+    {
+      title: 'About Us',
+      image: '/images/sunabouzu.jpg',
+      description: 'sunabouzu'
+    });
+});
 
 app.get('/weather', (req, res) => {
   res.send({
