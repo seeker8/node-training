@@ -5,7 +5,7 @@ const getNote = (title) => {
   const notes = loadNotes();
   const note = notes.find(note => note.title === title);
   if (note) {
-    console.log(`Title: ${note.title}\nNote: ${note.body}`);
+    console.log(`Title: ${chalk.black.bgWhite(note.title)}\nNote: ${note.body}`);
   }
   else {
     console.log(chalk.bgRed('Note not found'));
