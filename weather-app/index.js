@@ -7,17 +7,16 @@ if (!location) {
   console.log('Please provide a location');
 }
 else {
-  geoCode(location, (error, geoCodeData) => {
+  geoCode(location, (error, { latitude, longitude } = {}) => {
     if (error) {
       return console.log(error);
     }
-    const { latitude, longitude } = geoCodeData;
-    getForecast(latitude, longitude, (error, forecastData) => {
+    getForecast(latitude, longitude, (error, { temperature, units } = {}) => {
       if (error) {
         return console.log(error);
       }
-      console.log(geoCodeData);
-      console.log(forecastData);
+      console.log({ latitude, longitude });
+      console.log(temperature, units);
     });
   });
 }

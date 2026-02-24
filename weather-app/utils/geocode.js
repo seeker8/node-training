@@ -11,18 +11,18 @@ const geoCode = (address, callback) => {
       url: positionUrl,
       json: true
     },
-    (err, response) => {
+    (err, { body } = {}) => {
       if (err) {
         callback(err, undefined);
       }
-      else if (response.body?.data?.length === 0) {
+      else if (body?.data?.length === 0) {
         callback('Unable to find location. Try another search', undefined);
       }
-      else if (response.body?.error) {
-        callback('Something went wrong' + response.body.error.message, undefined);
+      else if (body?.error) {
+        callback('Something went wrong' + body.error.message, undefined);
       }
       else {
-        const { body: { data } } = response;
+        const { data } = body;
         callback(
           undefined,
           {
