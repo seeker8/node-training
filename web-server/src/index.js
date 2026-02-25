@@ -47,7 +47,7 @@ app.get('/weather', (req, res) => {
       message: 'An address is required'
     });
   }
-  geoCode(req.query.address, (error, geoCodeData) => {
+  geoCode(req.query.address, (error, geoCodeData = {}) => {
     if (error) {
       return res.send({
         error: 'error getting geocode',
@@ -56,7 +56,7 @@ app.get('/weather', (req, res) => {
     }
     else {
       const { latitude, longitude } = geoCodeData;
-      getForecast(latitude, longitude, (error, forecastData) => {
+      getForecast(latitude, longitude, (error, forecastData = {}) => {
         if (error) {
           return res.send({
             error: 'error getting forecast',
