@@ -39,9 +39,22 @@ app.get('/help', (req, res) => {
 });
 
 app.get('/weather', (req, res) => {
+  if (!req.query.address) {
+    return res.send({
+      error: 'No address provided',
+      message: 'An address is required'
+    });
+  }
   res.send({
     temperature: 75,
-    unit: 'C'
+    unit: 'C',
+    address: req.query.address
+  });
+});
+
+app.get('/products', (req, res) => {
+  res.send({
+    products: []
   });
 });
 
