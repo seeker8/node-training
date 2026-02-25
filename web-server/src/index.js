@@ -18,10 +18,12 @@ app.use(express.static(path.join(__dirname, '../public')));
 hbs.registerPartials(partialsPath);
 
 app.get('', (req, res) => {
+  console.log('/home');
   res.render('index', { title: 'Cool Weather App' });
 });
 
 app.get('/about', (req, res) => {
+  console.log('/about');
   res.render(
     'about',
     {
@@ -32,6 +34,7 @@ app.get('/about', (req, res) => {
 });
 
 app.get('/help', (req, res) => {
+  console.log('/help');
   res.render(
     'help',
     {
@@ -41,6 +44,7 @@ app.get('/help', (req, res) => {
 });
 
 app.get('/weather', (req, res) => {
+  console.log('/weather');
   if (!req.query.address) {
     return res.send({
       error: 'No address provided',
