@@ -41,6 +41,16 @@ h1 {
 
 .header a {
   text-decoration: none;
+  font-weight: 600;
+  color: black;
+}
+
+.hidden {
+  display: none;
+}
+
+.error {
+  color: red
 }
 
 .header ul {
@@ -59,4 +69,15 @@ footer {
   flex-flow: row;
   justify-content: center;
   color: gray;
+}
+
+.forecast-container {
+  border: 1px dashed green;
+  border-radius: 5px;
+  padding-left: 10px;
+  width: 40%;
+}
+
+button {
+  cursor: pointer;
 }
