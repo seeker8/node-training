@@ -6,13 +6,15 @@
 </head>
 
 <body>
-  <main class="container">
-    <header>
-      {{>header}}
-      <img src={{ image }} alt={{ description }} />
-    </header>
+  <div class="container">
+    {{>header}}
+    <main>
+      <header>
+        <img src={{ image }} alt={{ description }} />
+      </header>
+    </main>
     {{>footer}}
-  </main>
+  </div>
 </body>
 
 </html>

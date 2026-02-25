@@ -6,13 +6,15 @@
 </head>
 
 <body>
-  <main class="container">
-    <header>
-      {{>header}}
-      <p>{{ message }}</p>
-    </header>
+  <div class="container">
+    {{>header}}
+    <main>
+      <header>
+        <p>{{ message }}</p>
+      </header>
+    </main>
     {{>footer}}
-  </main>
+  </div>
 </body>
 
 </html>

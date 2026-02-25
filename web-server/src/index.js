@@ -45,6 +45,24 @@ app.get('/weather', (req, res) => {
   });
 });
 
+app.get('/help/*', (req, res) => {
+  res.render(
+    'not-found',
+    {
+      title: 'Help',
+      message: 'Help article not found'
+    });
+});
+
+app.get('*', (req, res) => {
+  res.render(
+    'not-found',
+    {
+      message: 'The page you are trying to visit. Doesn\'t Exist!'
+    }
+  )
+});
+
 app.listen(3000, (error) => {
   if (error) {
     console.log(error);
