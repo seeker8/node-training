@@ -1,6 +1,8 @@
 const path = require('path');
 const express = require('express');
 const hbs = require('hbs');
+const geoCode = require('./utils/geocode');
+const getForecast = require('./utils/forecast');
 
 // setup handlebars configuration
 
@@ -45,10 +47,28 @@ app.get('/weather', (req, res) => {
       message: 'An address is required'
     });
   }
-  res.send({
-    temperature: 75,
-    unit: 'C',
-    address: req.query.address
+  geoCode(req.query.address, (error, geoCodeData) => {
+    if (error) {
+      return res.send({
+        error: 'error getting geocode',
+        message: error
+      });
+    }
+    else {
+      const { latitude, longitude } = geoCodeData;
+      getForecast(latitude, longitude, (error, forecastData) => {
+        if (error) {
+          return res.send({
+            error: 'error getting forecast',
+            message: error
+          });
+        }
+        res.send({
+          ...geoCodeData,
+          ...forecastData
+        });
+      })
+    }
   });
 });
 
