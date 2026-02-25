@@ -14,7 +14,7 @@ weatherForm.addEventListener('submit', (event) => {
   loaderElem.classList.remove('hidden');
   const addressLocation = encodeURIComponent(search.value);
 
-  fetch(`http://localhost:3000/weather?address=${addressLocation}`).then((response) => {
+  fetch(`/weather?address=${addressLocation}`).then((response) => {
     response.json().then((data) => {
       loaderElem.classList.add('hidden');
       if (data.error) {
