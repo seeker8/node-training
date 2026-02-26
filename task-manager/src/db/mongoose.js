@@ -13,7 +13,13 @@ const UserSchema = new Schema({
   occupation: String
 });
 
+const TaskSchema = new Schema({
+  description: String,
+  completed: Boolean
+});
+
 const User = new model('User', UserSchema);
+const Task = new model('Task', TaskSchema);
 
 const user = new User({
   name: 'Aria',
@@ -21,4 +27,11 @@ const user = new User({
   occupation: 'student'
 });
 
-await user.save()
+const task = new Task({
+  description: 'an awesome description',
+  completed: false
+});
+
+// await user.save()
+const createdTask = await task.save();
+console.log(createdTask);
