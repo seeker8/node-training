@@ -59,6 +59,18 @@ app.route('/users/:id')
     catch (error) {
       res.status(400).send(error);
     }
+  })
+  .delete(async (req, res) => {
+    try {
+      const deletedUser = await User.findByIdAndDelete(req.params.id);
+      if (!deletedUser) {
+        return res.status(404).send();
+      }
+      res.send(deletedUser);
+    }
+    catch (error) {
+      res.status(500).send(error);
+    }
   });
 
 app.route('/tasks')
