@@ -128,6 +128,18 @@ app.route('/tasks/:id')
     catch (error) {
       res.status(400).send(error);
     }
+  })
+  .delete(async (req, res) => {
+    try {
+      const deletedTask = await Task.findByIdAndDelete(req.params.id);
+      if (!deletedTask) {
+        return res.status(404).send();
+      }
+      res.send(deletedTask);
+    }
+    catch (error) {
+      res.status(500).send(error);
+    }
   });
 
 
