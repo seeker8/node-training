@@ -1,4 +1,5 @@
 import { connect, Schema, model } from 'mongoose';
+import isEmail from 'validator/lib/isEmail.js';
 
 const dbURI = 'mongodb://localhost:27017/task-manager';
 // connect to mongoDB
@@ -8,14 +9,44 @@ connect(dbURI, {
 
 
 const UserSchema = new Schema({
-  name: String,
-  age: Number,
+  name: {
+    type: String,
+    require: true,
+    trim: true
+  },
+  age: {
+    type: Number,
+    validate: {
+      validator(v) {
+        if (v < 0) {
+          throw new Error('Age must be a positive number');
+        }
+      }
+    }
+  },
+  email: {
+    type: String,
+    require: true,
+    lowercase: true,
+    validate: {
+      validator: function (v) {
+        return isEmail(v);
+      },
+      errorMsg: 'Email is invalid'
+    }
+  },
   occupation: String
 });
 
 const TaskSchema = new Schema({
-  description: String,
-  completed: Boolean
+  description: {
+    type: String,
+    require: true
+  },
+  completed: {
+    type: Boolean,
+    default: false
+  }
 });
 
 const User = new model('User', UserSchema);
@@ -32,6 +63,16 @@ const task = new Task({
   completed: false
 });
 
+// test validator
+const user2 = new User({
+  name: 'Kinta    ',
+  age: 16,
+  occupation: 'student',
+  email: 'test@test.com'
+});
+const resultUser = await user2.save();
+console.log(resultUser);
+
 // await user.save()
-const createdTask = await task.save();
-console.log(createdTask);
+// const createdTask = await task.save();
+// console.log(createdTask);
