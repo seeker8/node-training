@@ -46,6 +46,18 @@ userRouter.route('/users/logout')
     }
   });
 
+userRouter.route('/users/logoutAll')
+  .post(auth, async (req, res) => {
+    try {
+      req.user.tokens = []
+      await req.user.save();
+      res.send()
+    }
+    catch (error) {
+      res.status(500).send();
+    }
+  });
+
 userRouter.route('/users/:id')
   .get(async (req, res) => {
     try {
