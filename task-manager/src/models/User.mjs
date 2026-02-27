@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
 import bycrypt from 'bcrypt';
 import isEmail from 'validator/lib/isEmail.js';
+import jwt from 'jsonwebtoken';
 
 
 const UserSchema = new Schema({
@@ -44,8 +45,20 @@ const UserSchema = new Schema({
     },
     errorMsg: 'Password Invalid'
   },
-  occupation: String
+  occupation: String,
+  tokens: [{
+    type: String,
+    required: true
+  }]
 });
+
+UserSchema.methods.generateAuthToken = async function () {
+  const user = this;
+  const token = jwt.sign({ _id: user._id }, 'thisistheway');
+  user.tokens = user.tokens.concat(token);
+  await user.save();
+  return token;
+};
 
 UserSchema.statics.findByCredentials = async (email, pwd) => {
   const user = await User.findOne({ email });
@@ -59,7 +72,9 @@ UserSchema.statics.findByCredentials = async (email, pwd) => {
     throw new Error('Unable to login');
   }
   return user;
-}
+};
+
+console.log('shema statics', UserSchema.statics);
 
 UserSchema.pre('save', async function () {
   const user = this;
