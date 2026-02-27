@@ -46,14 +46,13 @@ tasksRouter.route('/tasks/:id')
     }
 
     try {
-      const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body, {
-        returnDocument: 'after',
-        runValidators: true
-      });
-      if (!updatedTask) {
+      const taskToUpdate = await Task.findById(req.params.id);
+      if (!taskToUpdate) {
         return res.status(404).send()
       }
-      res.send(updatedTask);
+      taskToUpdate.set(req.body);
+      await taskToUpdate.save();
+      res.send(taskToUpdate);
     }
     catch (error) {
       res.status(400).send(error);
