@@ -24,6 +24,17 @@ userRouter.route('/users')
     }
   });
 
+userRouter.route('/users/login')
+  .post(async (req, res) => {
+    try {
+      const user = await User.findByCredentials(req.body.email, req.body.password);
+      res.send(user);
+    }
+    catch (error) {
+      res.status(400).send();
+    }
+  });
+
 userRouter.route('/users/:id')
   .get(async (req, res) => {
     try {

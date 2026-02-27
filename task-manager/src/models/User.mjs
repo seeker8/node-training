@@ -23,6 +23,7 @@ const UserSchema = new Schema({
     type: String,
     required: true,
     lowercase: true,
+    unique: true,
     validate: {
       validator: function (v) {
         return isEmail(v);
@@ -45,6 +46,20 @@ const UserSchema = new Schema({
   },
   occupation: String
 });
+
+UserSchema.statics.findByCredentials = async (email, pwd) => {
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new Error('Unable ot login');
+  }
+
+  const isMatch = await bycrypt.compare(pwd, user.password);
+
+  if (!isMatch) {
+    throw new Error('Unable to login');
+  }
+  return user;
+}
 
 UserSchema.pre('save', async function () {
   const user = this;
