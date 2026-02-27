@@ -1,4 +1,5 @@
 import express from 'express';
+import { auth } from '../middleware/auth.mjs';
 import { User } from '../models/User.mjs';
 
 export const userRouter = new express.Router();
@@ -14,15 +15,11 @@ userRouter.route('/users')
     catch (error) {
       res.status(400).send(error);
     }
-  })
-  .get(async (req, res) => {
-    try {
-      const users = await User.find({});
-      res.send(users);
-    }
-    catch (error) {
-      res.status(500).send(error);
-    }
+  });
+
+userRouter.route('/users/me')
+  .get(auth, async (req, res) => {
+    res.send(req.user);
   });
 
 userRouter.route('/users/login')

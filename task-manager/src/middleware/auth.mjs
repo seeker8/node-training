@@ -1,0 +1,24 @@
+import jwt from 'jsonwebtoken';
+import { User } from '../models/User.mjs';
+
+export const auth = async (req, res, next) => {
+  try {
+    const token = req.header('Authorization').replace('Bearer ', '');
+    const decoded = jwt.verify(token, 'thisistheway');
+    console.log(decoded, token);
+    const user = await User.findOne({
+      _id: decoded._id,
+      "tokens.token": token
+    });
+    console.log('user', user);
+
+    if (!user) {
+      throw new Error();
+    }
+    req.user = user;
+    next();
+  }
+  catch (error) {
+    res.status(401).send({ error: 'Please authenticate.' });
+  }
+}

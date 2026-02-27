@@ -47,15 +47,17 @@ const UserSchema = new Schema({
   },
   occupation: String,
   tokens: [{
-    type: String,
-    required: true
+    token: {
+      type: String,
+      required: true
+    }
   }]
 });
 
 UserSchema.methods.generateAuthToken = async function () {
   const user = this;
   const token = jwt.sign({ _id: user._id }, 'thisistheway');
-  user.tokens = user.tokens.concat(token);
+  user.tokens = user.tokens.concat({ token });
   await user.save();
   return token;
 };
@@ -73,8 +75,6 @@ UserSchema.statics.findByCredentials = async (email, pwd) => {
   }
   return user;
 };
-
-console.log('shema statics', UserSchema.statics);
 
 UserSchema.pre('save', async function () {
   const user = this;
