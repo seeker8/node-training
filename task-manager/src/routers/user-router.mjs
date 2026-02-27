@@ -5,9 +5,8 @@ export const userRouter = new express.Router();
 
 userRouter.route('/users')
   .post(async (req, res) => {
-    console.log(req.body);
-    const user = new User(req.body);
     try {
+      const user = new User(req.body);
       await user.save();
       res.status(201).send(user);
     }
@@ -41,14 +40,15 @@ userRouter.route('/users/:id')
   })
   .patch(async (req, res) => {
     try {
-      const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
-        returnDocument: 'after',
-        runValidators: true
-      });
-      if (!updatedUser) {
-        res.status(404).send(updatedUser);
+      const userToUpdate = await User.findById(req.params.id);
+
+      if (!userToUpdate) {
+        res.status(404).send(userToUpdate);
       }
-      res.send(updatedUser);
+
+      userToUpdate.set(req.body);
+      await userToUpdate.save();
+      res.send(userToUpdate);
     }
     catch (error) {
       res.status(400).send(error);

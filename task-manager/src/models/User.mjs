@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import bycrypt from 'bcrypt';
 import isEmail from 'validator/lib/isEmail.js';
 
 
@@ -43,6 +44,14 @@ const UserSchema = new Schema({
     errorMsg: 'Password Invalid'
   },
   occupation: String
+});
+
+UserSchema.pre('save', async function () {
+  const user = this;
+  if (user.isModified('password')) {
+    user.password = await bycrypt.hash(user.password, 8);
+  }
+
 });
 
 export const User = new model('User', UserSchema);
