@@ -19,8 +19,12 @@ tasksRouter.route('/tasks')
   .get(async (req, res) => {
     try {
       const match = {};
+      const sort = {};
       if (req.query.completed) {
         match.completed = req.query.completed === 'true' ? true : false;
+      }
+      if (req.query.sortBy) {
+        sort[req.query.sortBy] = req.query.order === 'asc' ? 1 : -1;
       }
       console.log(match);
       await req.user.populate({
@@ -28,7 +32,8 @@ tasksRouter.route('/tasks')
         match,
         options: {
           limit: parseInt(req.query.limit),
-          skip: parseInt(req.query.skip)
+          skip: parseInt(req.query.skip),
+          sort
         }
       });
       res.send(req.user.tasks);
