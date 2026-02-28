@@ -54,6 +54,12 @@ const UserSchema = new Schema({
   }]
 });
 
+UserSchema.virtual('tasks', {
+  ref: 'Task',
+  localField: '_id',
+  foreignField: 'owner'
+});
+
 UserSchema.methods.generateAuthToken = async function () {
   const user = this;
   const token = jwt.sign({ _id: user._id }, 'thisistheway');

@@ -1,12 +1,14 @@
 import express from 'express';
+import { auth } from '../middleware/auth.mjs';
 import { Task } from '../models/Task.mjs';
 
 export const tasksRouter = new express.Router();
 
 tasksRouter.route('/tasks')
+  .all(auth)
   .post(async (req, res) => {
     try {
-      const task = new Task(req.body);
+      const task = new Task({ ...req.body, owner: req.user._id });
       const newTask = await task.save();
       res.status(201).send(newTask);
     }
@@ -16,7 +18,7 @@ tasksRouter.route('/tasks')
   })
   .get(async (req, res) => {
     try {
-      const tasks = await Task.find({});
+      const tasks = await Task.find({ owner: req.user._id });
       res.send(tasks);
     }
     catch (error) {
@@ -25,9 +27,10 @@ tasksRouter.route('/tasks')
   });
 
 tasksRouter.route('/tasks/:id')
+  .all(auth)
   .get(async (req, res) => {
     try {
-      const task = await Task.findById(req.params.id);
+      const task = await Task.findOne({ _id: req.params.id, owner: req.user._id })
       if (!task) {
         return res.status(404).send();
       }
@@ -46,7 +49,7 @@ tasksRouter.route('/tasks/:id')
     }
 
     try {
-      const taskToUpdate = await Task.findById(req.params.id);
+      const taskToUpdate = await Task.findOne({ _id: req.params.id, owner: req.user.id });
       if (!taskToUpdate) {
         return res.status(404).send()
       }
@@ -60,11 +63,13 @@ tasksRouter.route('/tasks/:id')
   })
   .delete(async (req, res) => {
     try {
-      const deletedTask = await Task.findByIdAndDelete(req.params.id);
-      if (!deletedTask) {
+      const taskToDelete = await Task.findOne({ _id: req.params.id, owner: req.user._id });
+
+      if (!taskToDelete) {
         return res.status(404).send();
       }
-      res.send(deletedTask);
+      await taskToDelete.deleteOne();
+      res.send(taskToDelete);
     }
     catch (error) {
       res.status(500).send(error);
