@@ -23,7 +23,14 @@ tasksRouter.route('/tasks')
         match.completed = req.query.completed === 'true' ? true : false;
       }
       console.log(match);
-      await req.user.populate({ path: 'tasks', match });
+      await req.user.populate({
+        path: 'tasks',
+        match,
+        options: {
+          limit: parseInt(req.query.limit),
+          skip: parseInt(req.query.skip)
+        }
+      });
       res.send(req.user.tasks);
     }
     catch (error) {
