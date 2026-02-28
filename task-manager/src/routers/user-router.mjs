@@ -9,7 +9,7 @@ userRouter.route('/users')
     try {
       const user = new User(req.body);
       await user.save();
-      const token = user.generateAuthToken();
+      const token = await user.generateAuthToken();
       res.status(201).send({ user, token });
     }
     catch (error) {
@@ -18,8 +18,28 @@ userRouter.route('/users')
   });
 
 userRouter.route('/users/me')
-  .get(auth, async (req, res) => {
+  .all(auth)
+  .get(async (req, res) => {
     res.send(req.user);
+  })
+  .delete(async (req, res) => {
+    try {
+      await req.user.deleteOne();
+      res.send(req.user);
+    }
+    catch (error) {
+      res.status(500).send(error);
+    }
+  })
+  .patch(async (req, res) => {
+    try {
+      req.user.set(req.body);
+      await req.user.save();
+      res.send(req.user);
+    }
+    catch (error) {
+      res.status(400).send(error);
+    }
   });
 
 userRouter.route('/users/login')
@@ -55,47 +75,5 @@ userRouter.route('/users/logoutAll')
     }
     catch (error) {
       res.status(500).send();
-    }
-  });
-
-userRouter.route('/users/:id')
-  .get(async (req, res) => {
-    try {
-      const user = await User.findById(req.params.id);
-      if (!user) {
-        return res.status(404).send()
-      }
-      res.send(user);
-    }
-    catch (error) {
-      res.status(500).send(error);
-    }
-  })
-  .patch(async (req, res) => {
-    try {
-      const userToUpdate = await User.findById(req.params.id);
-
-      if (!userToUpdate) {
-        res.status(404).send(userToUpdate);
-      }
-
-      userToUpdate.set(req.body);
-      await userToUpdate.save();
-      res.send(userToUpdate);
-    }
-    catch (error) {
-      res.status(400).send(error);
-    }
-  })
-  .delete(async (req, res) => {
-    try {
-      const deletedUser = await User.findByIdAndDelete(req.params.id);
-      if (!deletedUser) {
-        return res.status(404).send();
-      }
-      res.send(deletedUser);
-    }
-    catch (error) {
-      res.status(500).send(error);
     }
   });
