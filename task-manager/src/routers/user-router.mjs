@@ -72,6 +72,8 @@ userRouter.route('/users/me/avatar')
   .post(avatar.single('avatar'), (req, res) => {
     console.log(req.path);
     res.send('avatar')
+  }, (error, req, res, next) => {
+    res.status(400).send({ error: error.message });
   });
 
 userRouter.route('/users/logout')
