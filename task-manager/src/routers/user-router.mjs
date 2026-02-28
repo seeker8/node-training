@@ -1,8 +1,22 @@
 import express from 'express';
 import { auth } from '../middleware/auth.mjs';
 import { User } from '../models/User.mjs';
+import multer from 'multer';
 
 export const userRouter = new express.Router();
+
+const avatar = multer({
+  dest: 'avatars/',
+  limts: {
+    fileSize: 1e6
+  },
+  fileFilter(req, file, cb) {
+    if (!file.originalname.match(/\.(jpg|jpeg|png)$/i)) {
+      return cb(new Error('Please upload a file jpg, jpeg, png'));
+    }
+    cb(undefined, true);
+  }
+});
 
 userRouter.route('/users')
   .post(async (req, res) => {
@@ -52,6 +66,12 @@ userRouter.route('/users/login')
     catch (error) {
       res.status(400).send();
     }
+  });
+
+userRouter.route('/users/me/avatar')
+  .post(avatar.single('avatar'), (req, res) => {
+    console.log(req.path);
+    res.send('avatar')
   });
 
 userRouter.route('/users/logout')
