@@ -18,10 +18,16 @@ tasksRouter.route('/tasks')
   })
   .get(async (req, res) => {
     try {
-      const tasks = await Task.find({ owner: req.user._id });
-      res.send(tasks);
+      const match = {};
+      if (req.query.completed) {
+        match.completed = req.query.completed === 'true' ? true : false;
+      }
+      console.log(match);
+      await req.user.populate({ path: 'tasks', match });
+      res.send(req.user.tasks);
     }
     catch (error) {
+      console.log(error);
       res.status(500).send(error);
     }
   });
