@@ -61,7 +61,6 @@ userRouter.route('/users/logoutAll')
 userRouter.route('/users/:id')
   .get(async (req, res) => {
     try {
-      console.log(req.params.id);
       const user = await User.findById(req.params.id);
       if (!user) {
         return res.status(404).send()
