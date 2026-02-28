@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import { Task } from '../models/Task.mjs';
 import bycrypt from 'bcrypt';
 import isEmail from 'validator/lib/isEmail.js';
 import jwt from 'jsonwebtoken';
@@ -96,6 +97,11 @@ UserSchema.pre('save', async function () {
     user.password = await bycrypt.hash(user.password, 8);
   }
 
+});
+
+UserSchema.pre('deleteOne', { document: true, query: false }, async function () {
+  const user = this;
+  await Task.deleteMany({ owner: user._id });
 });
 
 export const User = new model('User', UserSchema);
