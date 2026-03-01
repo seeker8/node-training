@@ -75,6 +75,16 @@ userRouter.route('/users/me/avatar')
     res.send('avatar')
   }, (error, req, res, next) => {
     res.status(400).send({ error: error.message });
+  })
+  .delete(async (req, res) => {
+    try {
+      req.user.avatar = undefined;
+      await req.user.save();
+      res.send(req.user);
+    }
+    catch (error) {
+      res.status(500).send();
+    }
   });
 
 userRouter.route('/users/logout')
