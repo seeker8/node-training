@@ -1,4 +1,5 @@
-import express, { response } from 'express';
+import express from 'express';
+import sharp from 'sharp';
 import { auth } from '../middleware/auth.mjs';
 import { User } from '../models/User.mjs';
 import multer from 'multer';
@@ -70,7 +71,15 @@ userRouter.route('/users/login')
 userRouter.route('/users/me/avatar')
   .all(auth)
   .post(avatar.single('avatar'), async (req, res) => {
-    req.user.avatar = req.file.buffer;
+    const buffer = await sharp(req.file.buffer)
+      .png()
+      .resize({
+        width: 250,
+        height: 250
+      })
+      .toBuffer();
+
+    req.user.avatar = buffer;
     await req.user.save();
     res.send('avatar')
   }, (error, req, res, next) => {
@@ -96,7 +105,7 @@ userRouter.route('/users/:id/avatar')
         throw new Error();
       }
 
-      res.set('Content-Type', 'image/jpg');
+      res.set('Content-Type', 'image/png');
       res.send(user.avatar);
     }
     catch (error) {
