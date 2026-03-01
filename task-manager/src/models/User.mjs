@@ -46,6 +46,9 @@ const UserSchema = new Schema({
     },
     errorMsg: 'Password Invalid'
   },
+  avatar: {
+    type: Buffer
+  },
   occupation: String,
   tokens: [{
     token: {

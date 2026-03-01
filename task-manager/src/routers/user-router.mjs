@@ -6,7 +6,6 @@ import multer from 'multer';
 export const userRouter = new express.Router();
 
 const avatar = multer({
-  dest: 'avatars/',
   limts: {
     fileSize: 1e6
   },
@@ -69,8 +68,10 @@ userRouter.route('/users/login')
   });
 
 userRouter.route('/users/me/avatar')
-  .post(avatar.single('avatar'), (req, res) => {
-    console.log(req.path);
+  .all(auth)
+  .post(avatar.single('avatar'), async (req, res) => {
+    req.user.avatar = req.file.buffer;
+    await req.user.save();
     res.send('avatar')
   }, (error, req, res, next) => {
     res.status(400).send({ error: error.message });
