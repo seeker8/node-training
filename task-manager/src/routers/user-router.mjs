@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { response } from 'express';
 import { auth } from '../middleware/auth.mjs';
 import { User } from '../models/User.mjs';
 import multer from 'multer';
@@ -84,6 +84,24 @@ userRouter.route('/users/me/avatar')
     }
     catch (error) {
       res.status(500).send();
+    }
+  });
+
+userRouter.route('/users/:id/avatar')
+  .get(async (req, res) => {
+    try {
+      const user = await User.findById(req.params.id);
+
+      if (!user || !user.avatar) {
+        throw new Error();
+      }
+
+      res.set('Content-Type', 'image/jpg');
+      res.send(user.avatar);
+    }
+    catch (error) {
+      console.log(error);
+      res.status(404).send();
     }
   });
 
