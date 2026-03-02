@@ -2,7 +2,7 @@ import request from 'supertest';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import { app } from '../src/app.mjs';
-import { test, beforeEach } from 'vitest';
+import { test, beforeEach, expect } from 'vitest';
 import { User } from '../src/models/User.mjs';
 
 const userOneId = new mongoose.Types.ObjectId();
@@ -22,7 +22,7 @@ beforeEach(async () => {
 });
 
 test('signup new user', async () => {
-  await request(app)
+  const response = await request(app)
     .post('/users')
     .send({
       name: 'Seiko',
@@ -30,16 +30,22 @@ test('signup new user', async () => {
       password: 'test123test'
     })
     .expect(201);
+
+  const user = User.findById(response.body.user._id);
+  expect(user).not.toBeNull();
 });
 
 test('login', async () => {
-  await request(app)
+  const response = await request(app)
     .post('/users/login')
     .send({
       email: userOne.email,
       password: userOne.password
     })
     .expect(200);
+  const dbUser = await User.findById(response.body.user._id);
+  expect(dbUser.tokens[1].token).toBe(response.body.token);
+
 });
 
 test('login failure', async () => {
