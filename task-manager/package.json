@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev:watch": "node --watch src/index.js"
+    "dev:watch": "node --env-file=../.env.local --watch src/index.js",
+    "dev:prod": "node --env-file=../.env src/index.js"
   },
   "keywords": [],
   "author": "",

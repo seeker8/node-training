@@ -4,6 +4,7 @@ import bycrypt from 'bcrypt';
 import isEmail from 'validator/lib/isEmail.js';
 import jwt from 'jsonwebtoken';
 
+const jwtSecret = process.env.JWT_SECRET;
 
 const UserSchema = new Schema({
   name: {
@@ -68,7 +69,7 @@ UserSchema.virtual('tasks', {
 
 UserSchema.methods.generateAuthToken = async function () {
   const user = this;
-  const token = jwt.sign({ _id: user._id }, 'thisistheway');
+  const token = jwt.sign({ _id: user._id }, jwtSecret);
   user.tokens = user.tokens.concat({ token });
   await user.save();
   return token;
