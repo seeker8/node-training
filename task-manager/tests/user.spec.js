@@ -87,3 +87,35 @@ test('delete failure when unauthenticated', async () => {
     .send()
     .expect(401);
 });
+
+test('upload avatar', async () => {
+  await request(app)
+    .post('/users/me/avatar')
+    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .attach('avatar', 'tests/fixture/okarun.jpg')
+    .expect(200);
+  const user = await User.findById(userOneId);
+  expect(user.avatar).toEqual(expect.any(Buffer));
+});
+
+test('update user', async () => {
+  await request(app)
+    .patch('/users/me')
+    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .send({
+      email: 'ayase@dandadan.com'
+    })
+    .expect(200);
+  const user = await User.findById(userOneId);
+  expect(user.email).toBe('ayase@dandadan.com');
+});
+
+test('update failure for invalid fields', async () => {
+  await request(app)
+    .patch('/users/me')
+    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .send({
+      school: 'Tokyo University'
+    })
+    .expect(400);
+});

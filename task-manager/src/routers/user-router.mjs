@@ -48,6 +48,12 @@ userRouter.route('/users/me')
   })
   .patch(async (req, res) => {
     try {
+      const updates = Object.keys(req.body);
+      const acceptedUpdated = ['name', 'email', 'password'];
+      const isValidOperation = updates.every(updt => acceptedUpdated.includes(updt));
+      if (!isValidOperation) {
+        res.status(400).send({ error: 'Invalid update' });
+      }
       req.user.set(req.body);
       await req.user.save();
       res.send(req.user);
