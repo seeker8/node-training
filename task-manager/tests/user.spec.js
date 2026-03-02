@@ -1,6 +1,18 @@
 import request from 'supertest';
 import { app } from '../src/app.mjs';
-import { test } from 'vitest';
+import { test, beforeEach } from 'vitest';
+import { User } from '../src/models/User.mjs';
+
+const userOne = {
+  name: 'Momo',
+  email: 'momo@dandadan.com',
+  password: 'TakakuraKen'
+};
+
+beforeEach(async () => {
+  await User.deleteMany();
+  await new User(userOne).save();
+});
 
 test('signup new user', async () => {
   await request(app)
@@ -12,3 +24,23 @@ test('signup new user', async () => {
     })
     .expect(201);
 });
+
+test('login', async () => {
+  await request(app)
+    .post('/users/login')
+    .send({
+      email: userOne.email,
+      password: userOne.password
+    })
+    .expect(200);
+});
+
+test('login failure', async () => {
+  await request(app)
+    .post('/users/login')
+    .send({
+      email: undefined,
+      password: userOne.password
+    })
+    .expect(400);
+})
