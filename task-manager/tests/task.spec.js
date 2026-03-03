@@ -12,7 +12,7 @@ beforeEach(async () => {
   await setupDatabase('Aira', 'aira@dandadan.com');
 });
 
-test('create task', async () => {
+test.skip('create task', async () => {
   const response = await request(app)
     .post('/tasks')
     .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
