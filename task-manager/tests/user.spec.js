@@ -1,24 +1,16 @@
 import request from 'supertest';
-import jwt from 'jsonwebtoken';
-import mongoose from 'mongoose';
 import { app } from '../src/app.mjs';
 import { test, beforeEach, expect } from 'vitest';
 import { User } from '../src/models/User.mjs';
+import {
+  userOneId,
+  userOne,
+  setupDatabase
+} from './fixture/db.js';
 
-const userOneId = new mongoose.Types.ObjectId();
-const userOne = {
-  _id: userOneId,
-  name: 'Momo',
-  email: 'momo@dandadan.com',
-  password: 'TakakuraKen',
-  tokens: [{
-    token: jwt.sign({ _id: userOneId }, process.env.JWT_SECRET)
-  }]
-};
 
 beforeEach(async () => {
-  await User.deleteMany();
-  await new User(userOne).save();
+  await setupDatabase();
 });
 
 test('signup new user', async () => {
