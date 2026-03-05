@@ -1,13 +1,13 @@
 .container {
   display: flex;
-  flex-flow: column;
-  width: 200px;
-  height: 150px;
+  flex-flow: row;
+  width: 250px;
+  height: 30px;
   justify-content: space-between;
 }
 
-.message-area {
-  height: 100px
+.message-input {
+  height: 20px
 }
 
 form+.container {

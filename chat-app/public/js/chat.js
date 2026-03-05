@@ -1,21 +1,28 @@
 const socket = io();
 
-socket.on('message', (message) => {
-  console.log(message);
-});
-
 const sendMessageForm = document.getElementById('message-form');
 const locationBtn = document.getElementById('location');
-const messageFormTextarea = document.getElementById('message');
+const messageFormInput = document.getElementById('message');
 const sendMessageBtn = document.getElementById('send-message');
+const messagesContainer = document.getElementById('messages');
+
+
+// templates
+const messageTemplate = document.getElementById('message-template').innerHTML;
+
+socket.on('message', (message) => {
+  console.log(message);
+  const html = Mustache.render(messageTemplate, { message });
+  messagesContainer.insertAdjacentHTML('beforeend', html);
+});
 
 sendMessageForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const formData = Object.fromEntries(new FormData(sendMessageForm).entries());
   if (formData.message) {
     sendMessageBtn.setAttribute('disabled', 'disabled');
-    messageFormTextarea.value = '';
-    messageFormTextarea.focus();
+    messageFormInput.value = '';
+    messageFormInput.focus();
     socket.emit('sendMessage', formData.message, (error) => {
       if (error) {
         return console.log(error);

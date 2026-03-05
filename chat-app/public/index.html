@@ -6,16 +6,25 @@
 </head>
 
 <body>
-  <h1>Hello</h1>
+  <h1>Chat App</h1>
+  <div id="messages"></div>
   <form id="message-form">
     <div class="container">
-      <textarea class="message-area" name="message" id="message"></textarea>
+      <input type="text" class="message-area" name="message" id="message">
       <button type="submit" id="send-message">Send</button>
     </div>
   </form>
   <div class="container">
     <button type="button" id="location">Send location</button>
   </div>
+
+  <script id="message-template" type="x-tmpl-mustache">
+    <div>
+      <p>{{message}}</p>
+    </div>
+  </script>
+
+  <script src="https://unpkg.com/mustache@latest"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/js/chat.js"></script>
 </body>
