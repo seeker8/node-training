@@ -1,13 +1,13 @@
 const socket = io();
-let count = 0;
 
-socket.on('countUpdated', (newCount) => {
-  console.log('count has been updated', count);
-  count = newCount;
+socket.on('message', (message) => {
+  console.log(message);
 });
 
-const incrementBtn = document.getElementById('increment');
-incrementBtn.addEventListener('click', (e) => {
-  console.log('clicked', count);
-  socket.emit('increment');
-});
+const sendMessageForm = document.getElementById('message-form');
+
+sendMessageForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const formData = Object.fromEntries(new FormData(sendMessageForm).entries());
+  socket.emit('sendMessage', formData.message);
+})

@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html>
 
-<head></head>
+<head>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
 
 <body>
   <h1>Hello</h1>
-  <button type="button" id="increment">Increment</button>
+  <form id="message-form">
+    <div class="container">
+      <textarea class="message-area" name="message"></textarea>
+      <button type="submit" id="send-message">Send</button>
+    </div>
+  </form>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/js/chat.js"></script>
 </body>

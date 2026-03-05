@@ -12,15 +12,15 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 app.use(express.static(path.join(__dirname, '../public')));
-let count = 0;
 
 io.on('connection', (socket) => {
-  console.log('connected');
-  socket.emit('countUpdated', count);
-  socket.on('increment', () => {
-    count++;
-    // socket.emit('countUpdated', count);
-    io.emit('countUpdated', count);
+  // this emits an event directly to the client which just connected
+  socket.emit('message', `Welcome! ${socket.id}`);
+  // this emits the event to all connected clients except the one just connected
+  socket.broadcast.emit('message', 'A new user has joined!');
+  socket.on('sendMessage', (message) => {
+    	// this emits the event to all connected clients
+	io.emit('message', message);
   });
 });
 
