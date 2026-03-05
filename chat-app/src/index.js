@@ -12,9 +12,16 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 app.use(express.static(path.join(__dirname, '../public')));
+let count = 0;
 
 io.on('connection', (socket) => {
   console.log('connected');
+  socket.emit('countUpdated', count);
+  socket.on('increment', () => {
+    count++;
+    // socket.emit('countUpdated', count);
+    io.emit('countUpdated', count);
+  });
 });
 
 server.listen(port, () => {
