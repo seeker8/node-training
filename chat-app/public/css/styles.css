@@ -9,3 +9,7 @@
 .message-area {
   height: 100px
 }
+
+form+.container {
+  margin-top: 15px;
+}

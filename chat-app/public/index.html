@@ -9,11 +9,13 @@
   <h1>Hello</h1>
   <form id="message-form">
     <div class="container">
-      <textarea class="message-area" name="message"></textarea>
+      <textarea class="message-area" name="message" id="message"></textarea>
       <button type="submit" id="send-message">Send</button>
     </div>
   </form>
-  <button type="button" id="location">Send location</button>
+  <div class="container">
+    <button type="button" id="location">Send location</button>
+  </div>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/js/chat.js"></script>
 </body>
