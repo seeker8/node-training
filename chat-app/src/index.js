@@ -2,6 +2,7 @@ import express from 'express';
 import http from 'node:http';
 import path from 'node:path';
 import { Server } from 'socket.io';
+import { Filter } from 'bad-words';
 
 const __dirname = import.meta.dirname;
 const port = process.env.PORT || 3000;
@@ -18,9 +19,14 @@ io.on('connection', (socket) => {
   socket.emit('message', `Welcome! ${socket.id}`);
   // this emits the event to all connected clients except the one just connected
   socket.broadcast.emit('message', 'A new user has joined!');
-  socket.on('sendMessage', (message) => {
+  socket.on('sendMessage', (message, callback) => {
+    const filter = new Filter();
+    if (filter.isProfane(message)) {
+      return callback('Profanity is not allowed');
+    }
     // this emits the event to all connected clients
     io.emit('message', message);
+    callback();
   });
 
   socket.on('sendLocation', (locationObj) => {

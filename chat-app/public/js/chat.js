@@ -10,7 +10,12 @@ const locationBtn = document.getElementById('location');
 sendMessageForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const formData = Object.fromEntries(new FormData(sendMessageForm).entries());
-  socket.emit('sendMessage', formData.message);
+  socket.emit('sendMessage', formData.message, (error) => {
+    if (error) {
+      return console.log(error);
+    }
+    console.log('message was received.')
+  });
   e.target.elements.message.value = '';
 });
 
