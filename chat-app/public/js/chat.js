@@ -6,6 +6,9 @@ const messageFormInput = document.getElementById('message');
 const sendMessageBtn = document.getElementById('send-message');
 const messagesContainer = document.getElementById('messages');
 
+function fromatTime(time) {
+  return dayjs(time).format('HH:mm a');
+}
 
 // templates
 const messageTemplate = document.getElementById('message-template').innerHTML;
@@ -14,13 +17,19 @@ const urlMessageTemplate = document.getElementById('url-message-template').inner
 // socket listeners
 socket.on('message', (message) => {
   console.log(message);
-  const html = Mustache.render(messageTemplate, { message });
+  const html = Mustache.render(
+    messageTemplate, {
+    message: message.text, createdAt: fromatTime(message.createdAt)
+  });
   messagesContainer.insertAdjacentHTML('beforeend', html);
 });
 
-socket.on('locationMessage', (locationUrl) => {
-  console.log(locationUrl);
-  const html = Mustache.render(urlMessageTemplate, { locationUrl });
+socket.on('locationMessage', (message) => {
+  console.log(message);
+  const html = Mustache.render(
+    urlMessageTemplate,
+    { url: message.location, createdAt: fromatTime(message.createdAt) }
+  );
   messagesContainer.insertAdjacentHTML('beforeend', html);
 });
 

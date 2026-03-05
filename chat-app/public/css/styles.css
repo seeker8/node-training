@@ -1,15 +1,44 @@
+body {
+  box-sizing: border-box;
+}
+
 .container {
   display: flex;
   flex-flow: row;
-  width: 250px;
+  width: 400px;
   height: 30px;
   justify-content: space-between;
 }
 
 .message-input {
-  height: 20px
+  width: 320px;
 }
 
 form+.container {
   margin-top: 15px;
+}
+
+.app-title {
+  width: 60vw;
+  background-color: lightblue;
+  font-size: 15px;
+  padding-left: 10px;
+}
+
+#messages {
+  max-height: 400px;
+  height: 400px;
+  width: 400px;
+  overflow: scroll;
+  margin-bottom: 20px;
+  border: 1px solid gray;
+}
+
+#messages>div:nth-child(even) {
+  background-color: lightgray;
+}
+
+#messages>div, #messages p {
+  margin: 5px 0;
+  ;
 }
