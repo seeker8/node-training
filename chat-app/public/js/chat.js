@@ -26,6 +26,17 @@ locationBtn.addEventListener('click', async (e) => {
   new Promise(
     (res, rej) => navigator.geolocation.getCurrentPosition(res, rej)
   )
-    .then((position) => socket.emit('sendLocation', { latitude: position.coords.latitude, longitude: position.coords.longitude }))
+    .then((position) => {
+      socket.emit(
+        'sendLocation',
+        { latitude: position.coords.latitude, longitude: position.coords.longitude },
+        (error) => {
+          if (error) {
+            return console.log(error);
+          }
+          console.log('Location shared!');
+        }
+      );
+    })
     .catch((err) => console.log('could not get location', err));
 });

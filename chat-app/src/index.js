@@ -29,9 +29,10 @@ io.on('connection', (socket) => {
     callback();
   });
 
-  socket.on('sendLocation', (locationObj) => {
+  socket.on('sendLocation', (locationObj, callback) => {
     const { longitude, latitude } = locationObj;
     io.emit('message', `https://www.google.com/maps/@${longitude},${latitude}`);
+    callback();
   });
 
   // this event is emitted when a client disconnects and needs to be setup from inside the 
