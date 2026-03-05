@@ -9,13 +9,23 @@ const messagesContainer = document.getElementById('messages');
 
 // templates
 const messageTemplate = document.getElementById('message-template').innerHTML;
+const urlMessageTemplate = document.getElementById('url-message-template').innerHTML;
 
+// socket listeners
 socket.on('message', (message) => {
   console.log(message);
   const html = Mustache.render(messageTemplate, { message });
   messagesContainer.insertAdjacentHTML('beforeend', html);
 });
 
+socket.on('locationMessage', (locationUrl) => {
+  console.log(locationUrl);
+  const html = Mustache.render(urlMessageTemplate, { locationUrl });
+  messagesContainer.insertAdjacentHTML('beforeend', html);
+});
+
+
+// html listeners
 sendMessageForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const formData = Object.fromEntries(new FormData(sendMessageForm).entries());

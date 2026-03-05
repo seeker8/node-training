@@ -7,6 +7,12 @@ import { Filter } from 'bad-words';
 const __dirname = import.meta.dirname;
 const port = process.env.PORT || 3000;
 
+const EVENT_TYPES = Object.freeze({
+  MESSAGE: 'message',
+  SEND_MESSAGE: 'sendMessage',
+  SEND_LOCATION: 'sendLocation'
+});
+
 const app = express();
 const server = http.createServer(app);
 // create socketio instance
@@ -16,29 +22,31 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 io.on('connection', (socket) => {
   // this emits an event directly to the client which just connected
-  socket.emit('message', `Welcome! ${socket.id}`);
+  socket.emit(EVENT_TYPES.MESSAGE, `Welcome! ${socket.id}`);
+
   // this emits the event to all connected clients except the one just connected
-  socket.broadcast.emit('message', 'A new user has joined!');
-  socket.on('sendMessage', (message, callback) => {
+  socket.broadcast.emit(EVENT_TYPES.MESSAGE, 'A new user has joined!');
+
+  socket.on(EVENT_TYPES.SEND_MESSAGE, (message, callback) => {
     const filter = new Filter();
     if (filter.isProfane(message)) {
       return callback('Profanity is not allowed');
     }
     // this emits the event to all connected clients
-    io.emit('message', message);
+    io.emit(EVENT_TYPES.MESSAGE, message);
     callback();
   });
 
-  socket.on('sendLocation', (locationObj, callback) => {
+  socket.on(EVENT_TYPES.SEND_LOCATION, (locationObj, callback) => {
     const { longitude, latitude } = locationObj;
-    io.emit('message', `https://www.google.com/maps/@${longitude},${latitude}`);
+    io.emit('locationMessage', `https://www.google.com/maps/@${longitude},${latitude}`);
     callback();
   });
 
   // this event is emitted when a client disconnects and needs to be setup from inside the 
   // connection listener
   socket.on('disconnect', () => {
-    io.emit('message', 'client has disconnected');
+    io.emit(EVENT_TYPES.MESSAGE, 'client has disconnected');
   });
 });
 
