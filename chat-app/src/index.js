@@ -19,8 +19,19 @@ io.on('connection', (socket) => {
   // this emits the event to all connected clients except the one just connected
   socket.broadcast.emit('message', 'A new user has joined!');
   socket.on('sendMessage', (message) => {
-    	// this emits the event to all connected clients
-	io.emit('message', message);
+    // this emits the event to all connected clients
+    io.emit('message', message);
+  });
+
+  socket.on('sendLocation', (locationObj) => {
+    const { longitude, latitude } = locationObj;
+    io.emit('message', `https://www.google.com/maps/@${longitude},${latitude}`);
+  });
+
+  // this event is emitted when a client disconnects and needs to be setup from inside the 
+  // connection listener
+  socket.on('disconnect', () => {
+    io.emit('message', 'client has disconnected');
   });
 });
 
