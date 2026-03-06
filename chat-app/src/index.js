@@ -4,7 +4,7 @@ import path from 'node:path';
 import { Server } from 'socket.io';
 import { Filter } from 'bad-words';
 import { generateMessage, generateLocationMessage } from './utils/messages.js';
-import { addUser, getUser, removeUser } from './utils/user.js';
+import { addUser, getUser, getUsersInRoom, removeUser } from './utils/user.js';
 
 const __dirname = import.meta.dirname;
 const port = process.env.PORT || 3000;
@@ -14,7 +14,8 @@ const EVENT_TYPES = Object.freeze({
   SEND_MESSAGE: 'sendMessage',
   SEND_LOCATION: 'sendLocation',
   LOCATION_MESSAGE: 'locationMessage',
-  JOIN: 'join'
+  JOIN: 'join',
+  ROOM_USERS: 'roomUsers'
 });
 
 const app = express();
@@ -42,6 +43,7 @@ io.on('connection', (socket) => {
       callback(error);
     }
     socket.join(room);
+    io.to(room).emit(EVENT_TYPES.ROOM_USERS, { users: getUsersInRoom(room), room: room });
     socket.emit(EVENT_TYPES.MESSAGE, generateMessage(`Welcome ${user.userName}`));
     socket.broadcast.to(user.joinedRoom).emit(EVENT_TYPES.MESSAGE, generateMessage(`${user.userName} has joined!`));
   });
@@ -60,7 +62,7 @@ io.on('connection', (socket) => {
   socket.on(EVENT_TYPES.SEND_LOCATION, (locationObj, callback) => {
     const user = getUser(socket.id);
     const { longitude, latitude } = locationObj;
-    io.emit(
+    io.to(user.joinedRoom).emit(
       EVENT_TYPES.LOCATION_MESSAGE,
       generateLocationMessage(`https://www.google.com/maps/@${longitude},${latitude}`, user)
     );
@@ -73,6 +75,9 @@ io.on('connection', (socket) => {
     const removedUser = removeUser(socket.id);
     if (removedUser) {
       io.to(removedUser.joinedRoom).emit(EVENT_TYPES.MESSAGE, generateMessage(`${removedUser.userName} has left`));
+      io
+        .to(removedUser.joinedRoom)
+        .emit(EVENT_TYPES.ROOM_USERS, { users: getUsersInRoom(removedUser.joinedRoom), room: removedUser.joinedRoom });
     }
   });
 });

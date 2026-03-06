@@ -5,6 +5,7 @@ const locationBtn = document.getElementById('location');
 const messageFormInput = document.getElementById('message');
 const sendMessageBtn = document.getElementById('send-message');
 const messagesContainer = document.getElementById('messages');
+const usersInRoomContainer = document.getElementById('users-in-room');
 
 function fromatTime(time) {
   return dayjs(time).format('HH:mm a');
@@ -13,6 +14,7 @@ function fromatTime(time) {
 // templates
 const messageTemplate = document.getElementById('message-template').innerHTML;
 const urlMessageTemplate = document.getElementById('url-message-template').innerHTML;
+const usersInRoomTemplate = document.getElementById('user-list-template').innerHTML;
 
 // options
 const params = Object.fromEntries(new URLSearchParams(location.search).entries());
@@ -34,6 +36,11 @@ socket.on('locationMessage', ({ url, createdAt, userName }) => {
     { url, createdAt: fromatTime(createdAt), userName }
   );
   messagesContainer.insertAdjacentHTML('beforeend', html);
+});
+
+socket.on('roomUsers', ({ room, users }) => {
+  const html = Mustache.render(usersInRoomTemplate, { room, users });
+  usersInRoomContainer.innerHTML = html;
 });
 
 socket.emit('join', { username: params.username, room: params.roomname }, (error) => {

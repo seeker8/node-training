@@ -26,16 +26,23 @@
 
   <div class="container-sm">
     <div class="row justify-content-center">
-      <div class="col-6 border border-2 p-2">
-        <div id="messages" class="messages-box"></div>
-        <form id="message-form">
-          <div class="input-group mt-2">
-            <input type="text" class="form-control" name="message" id="message">
-            <button type="submit" id="send-message" class="btn btn-outline-secondary">Send</button>
+      <div class="col-8">
+        <div class="row">
+          <dic class="col-3 border" id="users-in-room">
+
+          </dic>
+          <div class="col-9">
+            <div id="messages" class="messages-box"></div>
           </div>
-        </form>
-        <div class="container">
-          <button type="button" id="location">Send location</button>
+        </div>
+        <div>
+          <form id="message-form">
+            <div class="input-group mt-2">
+              <input type="text" class="form-control" name="message" id="message" autocomplete="off">
+              <button type="submit" id="send-message" class="btn btn-outline-secondary">Send</button>
+              <button type="button" id="location" class="btn btn-secondary">Send location</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -43,11 +50,11 @@
 
   <script id="message-template" type="x-tmpl-mustache">
     <div class='message'>
-      <p>
+      <p class="mb-1">
         <span class="message__name">{{userName}}</span>
         <span class="message__meta">{{createdAt}}</span>
       </p>
-      <p>
+      <p class="mb-1">
         {{text}}
       </p>
     </div>
@@ -62,6 +69,18 @@
       <p>
         <a href="{{locationUrl}}" target="_blank">My current location</a>
       </p>
+    </div>
+  </script>
+
+  <script id="user-list-template" type="x-tmpl-mustache">
+    <div>
+      <h5>{{room}}</h5>
+      <h6>Users</h6>
+      <ul class="list-group">
+        {{#users}}
+          <li class="list-group-item list-group-item-info">{{userName}}</li>
+        {{/users}}
+      <ul>
     </div>
   </script>
 
