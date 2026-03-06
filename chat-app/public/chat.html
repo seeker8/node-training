@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Chat App</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+
+<body>
+  <pre class="app-title">
+                       _           _      
+  __ _  __ _ _ __    _| |_ __   __| |___  
+ / _` |/ _` | '_ \  |__ | '_ \ / _` |__ \ 
+| (_| | (_| | |_) |  _| | |_) | | | |__) |
+ \__, |\__, |_.__/  |__/|_.__/|_| |_|___/ 
+    |_|   |_|                                                         
+  </pre>
+  <div id="messages" class="messages-box"></div>
+  <form id="message-form">
+    <div class="container">
+      <input type="text" class="message-input" name="message" id="message">
+      <button type="submit" id="send-message">Send</button>
+    </div>
+  </form>
+  <div class="container">
+    <button type="button" id="location">Send location</button>
+  </div>
+
+  <script id="message-template" type="x-tmpl-mustache">
+    <div class='message'>
+      <p>
+        <span class="message__name">User</span>
+        <span class="message__meta">{{createdAt}}</span>
+      </p>
+      <p>
+        {{text}}
+      </p>
+    </div>
+  </script>
+
+  <script id="url-message-template" type="x-tmpl-mustache">
+    <div class="message">
+      <p>
+        <span class="message__name">User</span>
+        <span class="message__meta">{{createdAt}}</span>
+      </p>
+      <p>
+        <a href="{{locationUrl}}" target="_blank">My current location</a>
+      </p>
+    </div>
+  </script>
+
+  <script src="https://unpkg.com/mustache@latest"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/dayjs.min.js"></script>
+  <script src="/js/chat.js"></script>
+</body>
+
+</html>
