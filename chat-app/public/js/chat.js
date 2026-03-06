@@ -15,11 +15,11 @@ const messageTemplate = document.getElementById('message-template').innerHTML;
 const urlMessageTemplate = document.getElementById('url-message-template').innerHTML;
 
 // socket listeners
-socket.on('message', (message) => {
+socket.on('message', ({ text, createdAt }) => {
   console.log(message);
   const html = Mustache.render(
     messageTemplate, {
-    message: message.text, createdAt: fromatTime(message.createdAt)
+    text, createdAt: fromatTime(createdAt)
   });
   messagesContainer.insertAdjacentHTML('beforeend', html);
 });
