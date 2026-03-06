@@ -31,7 +31,7 @@ beforeEach(() => {
 });
 
 test('add user', () => {
-  const user = addUser({
+  const { user } = addUser({
     id: 23,
     username: 'Okarun',
     room: 'dandadan'

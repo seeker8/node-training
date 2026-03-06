@@ -22,7 +22,7 @@ export const addUser = ({ id, username, room }) => {
   // Store user
   const user = { id, userName, joinedRoom };
   users.push(user);
-  return user;
+  return { user };
 };
 
 export const removeUser = (id) => {

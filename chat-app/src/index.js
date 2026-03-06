@@ -56,7 +56,7 @@ io.on('connection', (socket) => {
     callback();
   });
 
-  // this event is emitted when a client disconnects and needs to be setup from inside the 
+  // appUsersthis event is emitted when a client disconnects and needs to be setup from inside the 
   // connection listener
   socket.on('disconnect', () => {
     io.emit(EVENT_TYPES.MESSAGE, generateMessage('client has disconnected'));

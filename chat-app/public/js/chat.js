@@ -18,23 +18,30 @@ const urlMessageTemplate = document.getElementById('url-message-template').inner
 const params = Object.fromEntries(new URLSearchParams(location.search).entries());
 
 // socket listeners
-socket.on('message', ({ text, createdAt }) => {
+socket.on('message', ({ text, createdAt, userName }) => {
   const html = Mustache.render(
     messageTemplate, {
-    text, createdAt: fromatTime(createdAt)
+    text,
+    createdAt: fromatTime(createdAt),
+    userName
   });
   messagesContainer.insertAdjacentHTML('beforeend', html);
 });
 
-socket.on('locationMessage', ({ url, createdAt }) => {
+socket.on('locationMessage', ({ url, createdAt, userName }) => {
   const html = Mustache.render(
     urlMessageTemplate,
-    { url, createdAt: fromatTime(createdAt) }
+    { url, createdAt: fromatTime(createdAt), userName }
   );
   messagesContainer.insertAdjacentHTML('beforeend', html);
 });
 
-socket.emit('join', { user: params.username, room: params.roomname });
+socket.emit('join', { username: params.username, room: params.roomname }, (error) => {
+  if (error) {
+    console.log(error);
+    location.href = '/';
+  }
+});
 
 
 // html listeners
