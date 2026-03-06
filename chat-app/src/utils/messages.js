@@ -6,9 +6,9 @@ export function generateMessage(text) {
   };
 }
 
-export function generateLocationMessage(location) {
+export function generateLocationMessage(locationUrl) {
   return {
-    location,
+    url: locationUrl,
     createdAt: new Date().getTime()
   };
 }
