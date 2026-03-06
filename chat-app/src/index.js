@@ -12,7 +12,8 @@ const EVENT_TYPES = Object.freeze({
   MESSAGE: 'message',
   SEND_MESSAGE: 'sendMessage',
   SEND_LOCATION: 'sendLocation',
-  LOCATION_MESSAGE: 'locationMessage'
+  LOCATION_MESSAGE: 'locationMessage',
+  JOIN: 'join'
 });
 
 const app = express();
@@ -24,10 +25,17 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 io.on('connection', (socket) => {
   // this emits an event directly to the client which just connected
-  socket.emit(EVENT_TYPES.MESSAGE, generateMessage('Welcome!'));
+  // socket.emit(EVENT_TYPES.MESSAGE, generateMessage('Welcome!'));
 
   // this emits the event to all connected clients except the one just connected
-  socket.broadcast.emit(EVENT_TYPES.MESSAGE, generateMessage('A new user has joined!'));
+  // socket.broadcast.emit(EVENT_TYPES.MESSAGE, generateMessage('A new user has joined!'));
+
+  // this is to start a room
+  socket.on(EVENT_TYPES.JOIN, ({ user, room }) => {
+    socket.join(room);
+    socket.emit('Welcome');
+    socket.broadcast.to(room).emit(EVENT_TYPES.MESSAGE, generateMessage(`${user} has joined!`));
+  });
 
   socket.on(EVENT_TYPES.SEND_MESSAGE, (message, callback) => {
     const filter = new Filter();

@@ -14,9 +14,11 @@ function fromatTime(time) {
 const messageTemplate = document.getElementById('message-template').innerHTML;
 const urlMessageTemplate = document.getElementById('url-message-template').innerHTML;
 
+// options
+const params = Object.fromEntries(new URLSearchParams(location.search).entries());
+
 // socket listeners
 socket.on('message', ({ text, createdAt }) => {
-  console.log(message);
   const html = Mustache.render(
     messageTemplate, {
     text, createdAt: fromatTime(createdAt)
@@ -31,6 +33,8 @@ socket.on('locationMessage', ({ url, createdAt }) => {
   );
   messagesContainer.insertAdjacentHTML('beforeend', html);
 });
+
+socket.emit('join', { user: params.username, room: params.roomname });
 
 
 // html listeners
