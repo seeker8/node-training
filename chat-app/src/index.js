@@ -4,6 +4,7 @@ import path from 'node:path';
 import { Server } from 'socket.io';
 import { Filter } from 'bad-words';
 import { generateMessage, generateLocationMessage } from './utils/messages.js';
+import { addUser, getUser, removeUser } from './utils/user.js';
 
 const __dirname = import.meta.dirname;
 const port = process.env.PORT || 3000;
@@ -31,27 +32,37 @@ io.on('connection', (socket) => {
   // socket.broadcast.emit(EVENT_TYPES.MESSAGE, generateMessage('A new user has joined!'));
 
   // this is to start a room
-  socket.on(EVENT_TYPES.JOIN, ({ user, room }) => {
+  socket.on(EVENT_TYPES.JOIN, ({ username, room }, callback) => {
+    const { error, user } = addUser({
+      id: socket.id,
+      username,
+      room
+    });
+    if (error) {
+      callback(error);
+    }
     socket.join(room);
-    socket.emit('Welcome');
-    socket.broadcast.to(room).emit(EVENT_TYPES.MESSAGE, generateMessage(`${user} has joined!`));
+    socket.emit(EVENT_TYPES.MESSAGE, generateMessage(`Welcome ${user.userName}`));
+    socket.broadcast.to(user.joinedRoom).emit(EVENT_TYPES.MESSAGE, generateMessage(`${user.userName} has joined!`));
   });
 
   socket.on(EVENT_TYPES.SEND_MESSAGE, (message, callback) => {
+    const user = getUser(socket.id);
     const filter = new Filter();
     if (filter.isProfane(message)) {
       return callback('Profanity is not allowed');
     }
     // this emits the event to all connected clients
-    io.emit(EVENT_TYPES.MESSAGE, generateMessage(message));
+    io.to(user.joinedRoom).emit(EVENT_TYPES.MESSAGE, generateMessage(message, user));
     callback();
   });
 
   socket.on(EVENT_TYPES.SEND_LOCATION, (locationObj, callback) => {
+    const user = getUser(socket.id);
     const { longitude, latitude } = locationObj;
     io.emit(
       EVENT_TYPES.LOCATION_MESSAGE,
-      generateLocationMessage(`https://www.google.com/maps/@${longitude},${latitude}`)
+      generateLocationMessage(`https://www.google.com/maps/@${longitude},${latitude}`, user)
     );
     callback();
   });
@@ -59,7 +70,10 @@ io.on('connection', (socket) => {
   // appUsersthis event is emitted when a client disconnects and needs to be setup from inside the 
   // connection listener
   socket.on('disconnect', () => {
-    io.emit(EVENT_TYPES.MESSAGE, generateMessage('client has disconnected'));
+    const removedUser = removeUser(socket.id);
+    if (removedUser) {
+      io.to(removedUser.joinedRoom).emit(EVENT_TYPES.MESSAGE, generateMessage(`${removedUser.userName} has left`));
+    }
   });
 });
 

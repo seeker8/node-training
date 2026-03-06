@@ -1,5 +1,5 @@
 
-const users = [];
+let users = [];
 
 export const addUser = ({ id, username, room }) => {
   const userName = username.trim().toLowerCase();
