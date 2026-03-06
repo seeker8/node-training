@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev:watch": "node --watch src/index.js"
+    "dev:watch": "node --watch src/index.js",
+    "test": "vitest"
   },
   "author": "",
   "license": "ISC",
@@ -13,5 +14,8 @@
     "bad-words": "^4.0.0",
     "express": "^5.2.1",
     "socket.io": "^4.8.3"
+  },
+  "devDependencies": {
+    "vitest": "^4.0.18"
   }
 }
