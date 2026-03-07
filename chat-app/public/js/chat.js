@@ -19,6 +19,24 @@ const usersInRoomTemplate = document.getElementById('user-list-template').innerH
 // options
 const params = Object.fromEntries(new URLSearchParams(location.search).entries());
 
+const autoScroll = () => {
+  const lastMessage = messagesContainer.lastElementChild;
+  const messageStyles = getComputedStyle(lastMessage);
+  const messageMargin = parseInt(messageStyles.marginBottom);
+  const messageHeight = lastMessage.offsetHeight + messageMargin;
+
+  // visibleHeight
+  const visibleHeight = messagesContainer.offsetHeight;
+
+  const contaienrHeight = messagesContainer.scrollHeight;
+
+  const scrollOffset = messagesContainer.scrollTop + visibleHeight;
+
+  if (contaienrHeight - messageHeight <= scrollOffset) {
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
+}
+
 // socket listeners
 socket.on('message', ({ text, createdAt, userName }) => {
   const html = Mustache.render(
@@ -28,6 +46,7 @@ socket.on('message', ({ text, createdAt, userName }) => {
     userName
   });
   messagesContainer.insertAdjacentHTML('beforeend', html);
+  autoScroll();
 });
 
 socket.on('locationMessage', ({ url, createdAt, userName }) => {
@@ -36,6 +55,7 @@ socket.on('locationMessage', ({ url, createdAt, userName }) => {
     { url, createdAt: fromatTime(createdAt), userName }
   );
   messagesContainer.insertAdjacentHTML('beforeend', html);
+  autoScroll();
 });
 
 socket.on('roomUsers', ({ room, users }) => {
